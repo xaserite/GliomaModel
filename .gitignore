@@ -1,0 +1,8 @@
+C++.gitignore
+*.mod
+*.o
+*.exe
+*.data
+*.cbp
+*.depend
+*.layout
