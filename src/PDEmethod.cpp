@@ -1,22 +1,11 @@
 #include "PDEmethod.h"
 
-PDEmethod::PDEmethod()
-{
-    //ctor
-}
-
-PDEmethod::~PDEmethod()
-{
-    //dtor
-}
-
-void PDEmethod::set_methodParameters(methodParameters P)
-{
-    N_timeSteps = P.N_timeSteps;
-    N_spatialPoints = P.N_spatialPoints;
-    T = P.T;
-    x_0 = P.x_0;
-    x_N = P.x_N;
+void PDEmethod::set_methodParameters(methodParameters P){
+    N_timeSteps = P.N_timeSteps();
+    N_spatialPoints = P.N_spatialPoints();
+    T = P.T();
+    x_0 = P.x_0();
+    x_N = P.x_N();
     dt = T/N_timeSteps;
     compute_dx();
 }

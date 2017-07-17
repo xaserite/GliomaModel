@@ -9,8 +9,8 @@ using namespace std;
 class PDEmethod
 {
     public:
-        PDEmethod();
-        virtual ~PDEmethod();
+        PDEmethod(){}
+        virtual ~PDEmethod(){}
 
         unsigned int get_timeStep() { return timeStep; }
         double get_T() { return T; }
@@ -37,6 +37,7 @@ class PDEmethod
         double T, dt, dx, alpha, beta;
         double x_0, x_N;
         ifstream INPUTSTREAM;
+        ofstream OUTPUTSTREAM;
 
     private:
         void compute_dx();

@@ -7,12 +7,12 @@ AdvectionDiffusionMethod::AdvectionDiffusionMethod(methodParameters P){
     rho_work = vector<double>(N_spatialPoints);
 }
 
-AdvectionDiffusionMethod::AdvectionDiffusionMethod(methodParameters P,vector<double> data){
+AdvectionDiffusionMethod::AdvectionDiffusionMethod(methodParameters P,initialValueGen* iV){
     set_methodParameters(P);
     rho = vector<double>(N_spatialPoints);
     rho_init = vector<double>(N_spatialPoints);
     rho_work = vector<double>(N_spatialPoints);
-    if(data.size()==N_spatialPoints) set_initialValues(data);
+    set_initialValues(iV->get_rho());
 }
 
 void AdvectionDiffusionMethod::compute(){
@@ -42,7 +42,7 @@ void AdvectionDiffusionMethod::compute_boundary_values(vector<double>* rho_from,
 
 void AdvectionDiffusionMethod::compute_boundary_values_Neumann(vector<double>* rho_to){
     (*rho_to)[0] = (*rho_to)[1];
-    (*rho_to)[N_spatialPoints] = (*rho_to)[N_spatialPoints-1];
+    (*rho_to)[N_spatialPoints-1] = (*rho_to)[N_spatialPoints-2];
 }
 
 void AdvectionDiffusionMethod::compute_spatial_point(vector<double>* rho_from, vector<double>* rho_to, size_t i){
@@ -51,7 +51,7 @@ void AdvectionDiffusionMethod::compute_spatial_point(vector<double>* rho_from, v
         - .5*alpha*( (*rho_from)[i+1]-(*rho_from)[i-1] );
 }
 
-void AdvectionDiffusionMethod::read_initialValues(char* filename){
+void AdvectionDiffusionMethod::read_initialValues(string filename){
     unsigned int N_x;
     INPUTSTREAM.open(filename,ios::in);
     if(!INPUTSTREAM) return;
@@ -64,4 +64,19 @@ void AdvectionDiffusionMethod::read_initialValues(char* filename){
 
 void AdvectionDiffusionMethod::set_initialValues(vector<double> data){
     rho_init = data;
+}
+
+void AdvectionDiffusionMethod::set_initialValues(vector<double> *data){
+    for(size_t i=0;i<N_spatialPoints;i++)
+        rho_init[i] = (*data)[i];
+}
+
+void AdvectionDiffusionMethod::write_toGnuplot(string filename){
+    vector<double> *rho_from = (N_timeSteps%2)?&rho_work:&rho;
+    OUTPUTSTREAM.open(filename,ios::out);
+    if(!OUTPUTSTREAM) return;
+    for(size_t i=0;i<N_spatialPoints;i++){
+        OUTPUTSTREAM << x_0+i*dx << "\t" << (*rho_from)[i] << endl;
+    }
+    OUTPUTSTREAM.close();
 }

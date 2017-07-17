@@ -3,8 +3,11 @@
 
 #include <PDEmethod.h>
 #include <methodParams.h>
+#include <initialValueGen.h>
 #include <vector>
 #include <fstream>
+#include <string>
+#include <iostream>
 
 using namespace std;
 
@@ -13,12 +16,18 @@ class AdvectionDiffusionMethod : public PDEmethod
     public:
         AdvectionDiffusionMethod() {}
         AdvectionDiffusionMethod(methodParameters P);
-        AdvectionDiffusionMethod(methodParameters P,vector<double> data);
-        virtual ~AdvectionDiffusionMethod() {}
+        AdvectionDiffusionMethod(methodParameters P,initialValueGen* iV);
+        ~AdvectionDiffusionMethod(){
+            rho.clear();
+            rho_work.clear();
+            rho_init.clear();
+        }
 
         void compute();
-        void read_initialValues(char* filename);
+        void read_initialValues(string filename);
         void set_initialValues(vector<double> data);
+        void set_initialValues(vector<double> *data);
+        void write_toGnuplot(string filename);
 
     protected:
 
