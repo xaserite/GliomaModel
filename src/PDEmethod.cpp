@@ -11,7 +11,7 @@ void PDEmethod::set_methodParameters(methodParameters P){
 }
 
 void PDEmethod::compute_dx(){
-    dx = (x_N-x_0)/N_spatialPoints;
+    dx = (x_N-x_0)/(N_spatialPoints-1);
     compute_alpha();
     compute_beta();
 }
