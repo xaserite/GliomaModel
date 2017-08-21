@@ -14,6 +14,7 @@ class methodParameters{
             INPUTSTREAM.open(filename,ios::in);
             INPUTSTREAM >> n_timeSteps >> n_spatialPoints;
             INPUTSTREAM >> t >> X_0 >> X_N;
+            INPUTSTREAM >> L1 >> L2;
             INPUTSTREAM >> Eps;
             INPUTSTREAM.close();
         }
@@ -24,10 +25,12 @@ class methodParameters{
         double x_0(){ return X_0; }
         double x_N(){ return X_N; }
         double eps(){ return Eps; }
+        double l1(){ return L1; }
+        double l2(){ return L2; }
     protected:
     private:
         unsigned int n_timeSteps, n_spatialPoints;
-        double t, X_0, X_N, Eps;
+        double t, X_0, X_N, Eps, L1, L2;
 };
 
 #endif // PARAMETER_H

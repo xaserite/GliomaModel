@@ -34,6 +34,7 @@ class AdvectionDiffusionMethod : public PDEmethod
     private:
         vector<double> rho, rho_work, rho_init;
         double (*vvQ)(unsigned int);
+        double l1, l2;
         void init_values();
         void compute_time_iteration(vector<double>* rho_from, vector<double>* rho_to);
         void compute_boundary_values(vector<double>* rho_from, vector<double>* rho_to);

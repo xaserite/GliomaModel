@@ -8,6 +8,8 @@
 
 using namespace std;
 
+
+
 void ADM(){
     methodParameters P("param.data");
     initialValueGen iV(P.N_spatialPoints(),"SQ","ADM");
@@ -19,7 +21,9 @@ void ADM(){
 void GM(){
     methodParameters P("param.data");
     initialValueGen iV(P.N_spatialPoints(),"SQ","ADM");
-    velocitySpace V("vSpace.data");
+    //velocitySpace V("vSpace.data",true);
+    velocitySpace V("vSpace.data",false);
+    V.GM_fill_E(&P);
     GliomaModel M(P,&V,&iV);
     M.compute();
     M.write_toGnuplot("rho.data");

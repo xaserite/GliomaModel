@@ -2,6 +2,7 @@
 
 AdvectionDiffusionMethod::AdvectionDiffusionMethod(methodParameters P){
     set_methodParameters(P);
+    l1 = P.l1(); l2 = P.l2();
     rho = vector<double>(N_spatialPoints);
     rho_init = vector<double>(N_spatialPoints);
     rho_work = vector<double>(N_spatialPoints);
@@ -9,6 +10,7 @@ AdvectionDiffusionMethod::AdvectionDiffusionMethod(methodParameters P){
 
 AdvectionDiffusionMethod::AdvectionDiffusionMethod(methodParameters P,initialValueGen* iV){
     set_methodParameters(P);
+    l1 = P.l1(); l2 = P.l2();
     rho = vector<double>(N_spatialPoints);
     rho_init = vector<double>(N_spatialPoints);
     rho_work = vector<double>(N_spatialPoints);
@@ -47,8 +49,8 @@ void AdvectionDiffusionMethod::compute_boundary_values_Neumann(vector<double>* r
 
 void AdvectionDiffusionMethod::compute_spatial_point(vector<double>* rho_from, vector<double>* rho_to, size_t i){
     (*rho_to)[i] = (*rho_from)[i]
-        + beta*( (*rho_from)[i-1]-2*(*rho_from)[i]+(*rho_from)[i+1] )
-        - .5*alpha*( (*rho_from)[i+1]-(*rho_from)[i-1] );
+        + beta/l1*( (*rho_from)[i-1]-2*(*rho_from)[i]+(*rho_from)[i+1] )
+        - .5*l2/l1*alpha*( (*rho_from)[i+1]-(*rho_from)[i-1] );
 }
 
 void AdvectionDiffusionMethod::read_initialValues(string filename){

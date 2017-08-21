@@ -29,7 +29,7 @@ class GliomaModel : public PDEmethod
         vector<double> *rho_old, *rho_up;
         vector< vector<double> > *g_old, *g_up;
         velocitySpace *V;
-        double eps;
+        double eps, l1, l2;
         double vgInt;
         ofstream OUTPUTfILESTREAM;
 
@@ -41,6 +41,8 @@ class GliomaModel : public PDEmethod
         void compute_g_inner(unsigned int i);
         void compute_rho_inner(unsigned int i);
         void compute_boundary_Neumann();
+        void compute_boundary_periodic();
+        void compute_boundary_Dirichlet();
 
         double integral_vDg();
         double integral_vg(unsigned int i);
