@@ -1,6 +1,5 @@
 #include "GliomaModel.h"
 
-
 GliomaModel::GliomaModel(methodParameters P,velocitySpace *v){
     set_methodParameters(P);
     eps = P.eps();
@@ -9,10 +8,10 @@ GliomaModel::GliomaModel(methodParameters P,velocitySpace *v){
     rho = vector<double>(N_spatialPoints);
     rho_init = vector<double>(N_spatialPoints);
     rho_work = vector<double>(N_spatialPoints);
-    g = vector< vector<double> >(V->N);
-    g_work = vector< vector<double> >(V->N);
-    vDg = vector<double>(V->N);
-    for(size_t j=0;j<V->N;j++){
+    g = vector< vector<double> >(V->N());
+    g_work = vector< vector<double> >(V->N());
+    vDg = vector<double>(V->N());
+    for(size_t j=0;j<V->N();j++){
         g[j] = vector<double>(N_spatialPoints+1);
         g_work[j] = vector<double>(N_spatialPoints+1);
     }
@@ -26,10 +25,10 @@ GliomaModel::GliomaModel(methodParameters P,velocitySpace *v,initialValueGen* iV
     rho = vector<double>(N_spatialPoints);
     rho_init = vector<double>(N_spatialPoints);
     rho_work = vector<double>(N_spatialPoints);
-    g = vector< vector<double> >(V->N);
-    g_work = vector< vector<double> >(V->N);
-    vDg = vector<double>(V->N);
-    for(size_t j=0;j<V->N;j++){
+    g = vector< vector<double> >(V->N());
+    g_work = vector< vector<double> >(V->N());
+    vDg = vector<double>(V->N());
+    for(size_t j=0;j<V->N();j++){
         g[j] = vector<double>(N_spatialPoints+1);
         g_work[j] = vector<double>(N_spatialPoints+1);
     }
@@ -40,7 +39,7 @@ GliomaModel::~GliomaModel(){
     rho.clear();
     rho_work.clear();
     rho_init.clear();
-    for(size_t i=0;i<V->N;i++){
+    for(size_t i=0;i<V->N();i++){
         g[i].clear();
         g_work[i].clear();
     }
@@ -67,7 +66,7 @@ void GliomaModel::set_rho_init(vector<double> *data){
 void GliomaModel::init_values(){
     for(size_t i=0;i<N_spatialPoints;i++){
         rho[i] = rho_work[i] = rho_init[i];
-        for(size_t j=0;j<V->N;j++)
+        for(size_t j=0;j<V->N();j++)
             g[j][i] = g_work[j][i] = 0;
     }
 }
@@ -95,16 +94,16 @@ void GliomaModel::compute_time_iteration(){
 }
 
 void GliomaModel::compute_vDg_fb(unsigned int i){
-    for(size_t j=0;j<V->N;j++)
-        if(V->v[j]>0)
-            vDg[j] = V->v[j]/dx* ( (*g_old)[j][i]-(*g_old)[j][i-1] );
+    for(size_t j=0;j<V->N();j++)
+        if(V->v(j)>0)
+            vDg[j] = V->v(j)/dx* ( (*g_old)[j][i]-(*g_old)[j][i-1] );
         else
-            vDg[j] = V->v[j]/dx* ( (*g_old)[j][i+1]-(*g_old)[j][i] );
+            vDg[j] = V->v(j)/dx* ( (*g_old)[j][i+1]-(*g_old)[j][i] );
 }
 
 void GliomaModel::compute_vDg(unsigned int i){
-    for(size_t j=0;j<V->N;j++)
-        vDg[j] = V->v[j]*( (*g_old)[j][i+1]-(*g_old)[j][i] )/dx;
+    for(size_t j=0;j<V->N();j++)
+        vDg[j] = V->v(j)*( (*g_old)[j][i+1]-(*g_old)[j][i] )/dx;
 }
 
 void GliomaModel::compute_g_inner(unsigned int i){
@@ -112,8 +111,8 @@ void GliomaModel::compute_g_inner(unsigned int i){
     double vDgInt = integral_vDg();
     double Drho = ( (*rho_old)[i]-(*rho_old)[i-1] )/dx;
     vgInt = integral_vg(i);
-    for(size_t j=0;j<V->N;j++){
-        double vEDrho = V->v[j]*V->E(j,i) *Drho/eps;
+    for(size_t j=0;j<V->N();j++){
+        double vEDrho = V->v(j)*V->E(j,i) *Drho/eps;
         double ProjvDg = vDg[j] -V->E(j,i)*vDgInt;
         double g_ = (*g_old)[j][i] +dt/eps *( ProjS(i,j)-ProjvDg-vEDrho );
         (*g_up)[j][i] = g_ / (1 + l1* dt/eps/eps);
@@ -128,15 +127,15 @@ void GliomaModel::compute_rho_inner(unsigned int i){
 }
 
 double GliomaModel::ProjS(unsigned int i,unsigned int j){
-    double vRhoE = V->v[j]*V->E(j,i)/(2*eps) * ( (*rho_old)[i]+(*rho_old)[i+1] );
-    double vgProj = V->v[j]*(*g_old)[j][i] - vgInt*V->E(j,i);
+    double vRhoE = V->v(j)*V->E(j,i)/(2*eps) * ( (*rho_old)[i]+(*rho_old)[i+1] );
+    double vgProj = V->v(j)*(*g_old)[j][i] - vgInt*V->E(j,i);
     return l2*(vRhoE + vgProj) ;
 }
 
 void GliomaModel::compute_boundary_Neumann(){
     (*rho_up)[0] = (*rho_up)[1];
     (*rho_up)[N_spatialPoints-1] = (*rho_up)[N_spatialPoints-2];
-    for(size_t j=0;j<V->N;j++){
+    for(size_t j=0;j<V->N();j++){
         (*g_up)[j][0] = (*g_up)[j][1];
         (*g_up)[j][N_spatialPoints] = (*g_up)[j][N_spatialPoints-1];
     }
@@ -145,7 +144,7 @@ void GliomaModel::compute_boundary_Neumann(){
 void GliomaModel::compute_boundary_periodic(){
     (*rho_up)[0] = (*rho_up)[N_spatialPoints-2];
     (*rho_up)[N_spatialPoints-1] = (*rho_up)[1];
-    for(size_t j=0;j<V->N;j++){
+    for(size_t j=0;j<V->N();j++){
         (*g_up)[j][0] = (*g_up)[j][N_spatialPoints-1];
         (*g_up)[j][N_spatialPoints] = (*g_up)[j][1];
     }
@@ -154,7 +153,7 @@ void GliomaModel::compute_boundary_periodic(){
 void GliomaModel::compute_boundary_Dirichlet(){
     (*rho_up)[0] = 0;
     (*rho_up)[N_spatialPoints-1] = 0;
-    for(size_t j=0;j<V->N;j++){
+    for(size_t j=0;j<V->N();j++){
         (*g_up)[j][0] = 0;
         (*g_up)[j][N_spatialPoints] = 0;
     }
@@ -162,15 +161,15 @@ void GliomaModel::compute_boundary_Dirichlet(){
 
 double GliomaModel::integral_vDg(){
     double I = 0;
-    for(size_t j=0;j<V->N;j++)
-        I += vDg[j] * V->w[j];
+    for(size_t j=0;j<V->N();j++)
+        I += vDg[j] * V->w(j);
     return I;
 }
 
 double GliomaModel::integral_vg(unsigned int i){
     double I = 0;
-    for(size_t j=0;j<V->N;j++)
-        I += (*g_old)[j][i] * V->v[j]*V->w[j];
+    for(size_t j=0;j<V->N();j++)
+        I += (*g_old)[j][i] * V->v(j)*V->w(j);
     return I;
 }
 
