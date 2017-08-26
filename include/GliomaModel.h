@@ -33,6 +33,7 @@ class GliomaModel : public PDEmethod
         double vgInt;
         ofstream OUTPUTfILESTREAM;
 
+        void init(methodParameters P,velocitySpace *v);
         void init_values();
         void swap_func_pointers();
         void compute_time_iteration();

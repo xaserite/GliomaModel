@@ -1,37 +1,11 @@
 #include "GliomaModel.h"
 
 GliomaModel::GliomaModel(methodParameters P,velocitySpace *v){
-    set_methodParameters(P);
-    eps = P.eps();
-    l1 = P.l1(); l2 = P.l2();
-    V = v;
-    rho = vector<double>(N_spatialPoints);
-    rho_init = vector<double>(N_spatialPoints);
-    rho_work = vector<double>(N_spatialPoints);
-    g = vector< vector<double> >(V->N());
-    g_work = vector< vector<double> >(V->N());
-    vDg = vector<double>(V->N());
-    for(size_t j=0;j<V->N();j++){
-        g[j] = vector<double>(N_spatialPoints+1);
-        g_work[j] = vector<double>(N_spatialPoints+1);
-    }
+    init(P,v);
 }
 
 GliomaModel::GliomaModel(methodParameters P,velocitySpace *v,initialValueGen* iV){
-    set_methodParameters(P);
-    eps = P.eps();
-    l1 = P.l1(); l2 = P.l2();
-    V = v;
-    rho = vector<double>(N_spatialPoints);
-    rho_init = vector<double>(N_spatialPoints);
-    rho_work = vector<double>(N_spatialPoints);
-    g = vector< vector<double> >(V->N());
-    g_work = vector< vector<double> >(V->N());
-    vDg = vector<double>(V->N());
-    for(size_t j=0;j<V->N();j++){
-        g[j] = vector<double>(N_spatialPoints+1);
-        g_work[j] = vector<double>(N_spatialPoints+1);
-    }
+    init(P,v);
     set_rho_init(iV->get_rho());
 }
 
@@ -55,6 +29,23 @@ void GliomaModel::compute(){
         swap_func_pointers();
         compute_time_iteration();
         timeStep++;
+    }
+}
+
+void GliomaModel::init(methodParameters P,velocitySpace *v){
+    set_methodParameters(P);
+    eps = P.eps();
+    l1 = P.l1(); l2 = P.l2();
+    V = v;
+    rho = vector<double>(N_spatialPoints);
+    rho_init = vector<double>(N_spatialPoints);
+    rho_work = vector<double>(N_spatialPoints);
+    g = vector< vector<double> >(V->N());
+    g_work = vector< vector<double> >(V->N());
+    vDg = vector<double>(V->N());
+    for(size_t j=0;j<V->N();j++){
+        g[j] = vector<double>(N_spatialPoints+1);
+        g_work[j] = vector<double>(N_spatialPoints+1);
     }
 }
 

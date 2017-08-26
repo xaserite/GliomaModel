@@ -22,8 +22,7 @@ class velocitySpace{
 
     private:
         ifstream FILESTREAM;
-        vector<double> _w, _v;
-        double* _E;
+        vector<double> _w, _v, _E;
         unsigned int _N, _Nx;
         bool is_E_const, do_read_E;
 

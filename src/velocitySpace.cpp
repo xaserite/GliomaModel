@@ -7,6 +7,7 @@ velocitySpace::velocitySpace(string filename,bool Do_read_E){
     is_E_const = (_Nx==1);
     _v = vector<double>(_N);
     _w = vector<double>(_N);
+    _E = vector<double>(_N*_Nx);
     for(size_t j=0;j<_N;j++)
         FILESTREAM >> _v[j];
     for(size_t j=0;j<_N;j++)
@@ -18,13 +19,12 @@ velocitySpace::velocitySpace(string filename,bool Do_read_E){
 velocitySpace::~velocitySpace(){
     _v.clear();
     _w.clear();
-    free(_E);
+    _E.clear();
 }
 
 void velocitySpace::GM_fill_E(methodParameters *P){
     unsigned int _xN = P->N_spatialPoints();
     if(_N!=2) return;
-    _E = (double*)malloc(_xN * 2 * sizeof(double));
     for(size_t i=0;i<_xN;i++){
         _E[i] = (double)i/_xN;
         _E[_xN+i] = 1-_E[i];
@@ -49,7 +49,6 @@ unsigned int velocitySpace::N(){
 }
 
 void velocitySpace::read_E(){
-    _E = (double*) malloc(_N*_Nx);
     for(size_t j=0;j<_N;j++){
         for(size_t i=0;i<_Nx;i++)
             FILESTREAM >> _E[j*_Nx+i];
