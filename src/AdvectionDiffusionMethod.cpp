@@ -1,20 +1,15 @@
 #include "AdvectionDiffusionMethod.h"
 
-AdvectionDiffusionMethod::AdvectionDiffusionMethod(methodParameters P){
-    set_methodParameters(P);
-    l1 = P.l1(); l2 = P.l2();
-    rho = vector<double>(N_spatialPoints);
-    rho_init = vector<double>(N_spatialPoints);
-    rho_work = vector<double>(N_spatialPoints);
-}
-
-AdvectionDiffusionMethod::AdvectionDiffusionMethod(methodParameters P,initialValueGen* iV){
+AdvectionDiffusionMethod::AdvectionDiffusionMethod(methodParameters P,velocitySpace *v,initialValueGen* iV){
     set_methodParameters(P);
     l1 = P.l1(); l2 = P.l2();
     rho = vector<double>(N_spatialPoints);
     rho_init = vector<double>(N_spatialPoints);
     rho_work = vector<double>(N_spatialPoints);
     set_initialValues(iV->get_rho());
+    V = v;
+    vvQint = V->is_constant() ? vector<double>(1) : vector<double>(N_spatialPoints);
+    compute_vvQint();
 }
 
 void AdvectionDiffusionMethod::compute(){
@@ -30,6 +25,20 @@ void AdvectionDiffusionMethod::compute(){
 void AdvectionDiffusionMethod::init_values(){
     for(size_t i=0;i<N_spatialPoints;i++)
         rho[i] = rho_work[i] = rho_init[i];
+}
+
+void AdvectionDiffusionMethod::compute_vvQint(){
+    if(V->is_constant()){
+        vvQint[0] = 0;
+        for(size_t j=0;j<V->N();j++)
+            vvQint[0] += V->v(j) * V->v(j) * V->E(j,0) * V->w(j);
+    }else{
+        for(size_t i=0;i<N_spatialPoints;i++){
+            vvQint[i] = 0;
+            for(size_t j=0;j<V->N();j++)
+                vvQint[i] += V->v(j) * V->v(j) * V->E(j,i) * V->w(j);
+        }
+    }
 }
 
 void AdvectionDiffusionMethod::compute_time_iteration(vector<double>* rho_from, vector<double>* rho_to){
@@ -48,9 +57,14 @@ void AdvectionDiffusionMethod::compute_boundary_values_Neumann(vector<double>* r
 }
 
 void AdvectionDiffusionMethod::compute_spatial_point(vector<double>* rho_from, vector<double>* rho_to, size_t i){
-    (*rho_to)[i] = (*rho_from)[i]
-        + beta/l1*( (*rho_from)[i-1]-2*(*rho_from)[i]+(*rho_from)[i+1] )
-        - .5*l2/l1*alpha*( (*rho_from)[i+1]-(*rho_from)[i-1] );
+    if(V->is_constant())
+        (*rho_to)[i] = (*rho_from)[i]
+            + beta/l1*( vvQint[0]*(*rho_from)[i-1] -2*vvQint[0]*(*rho_from)[i] +vvQint[0]*(*rho_from)[i+1] )
+            - .5*l2/l1*alpha*( vvQint[0]*(*rho_from)[i+1] - vvQint[0]*(*rho_from)[i-1] );
+    else
+        (*rho_to)[i] = (*rho_from)[i]
+            + beta/l1*( vvQint[i-1]*(*rho_from)[i-1] -2*vvQint[i]*(*rho_from)[i] +vvQint[i+1]*(*rho_from)[i+1] )
+            - .5*l2/l1*alpha*( vvQint[i+1]*(*rho_from)[i+1] - vvQint[i-1]*(*rho_from)[i-1] );
 }
 
 void AdvectionDiffusionMethod::read_initialValues(string filename){

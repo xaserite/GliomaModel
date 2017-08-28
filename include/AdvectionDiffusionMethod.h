@@ -4,6 +4,7 @@
 #include <PDEmethod.h>
 #include <methodParams.h>
 #include <initialValueGen.h>
+#include <velocitySpace.h>
 #include <vector>
 #include <fstream>
 #include <string>
@@ -15,12 +16,12 @@ class AdvectionDiffusionMethod : public PDEmethod
 {
     public:
         AdvectionDiffusionMethod() {}
-        AdvectionDiffusionMethod(methodParameters P);
-        AdvectionDiffusionMethod(methodParameters P,initialValueGen* iV);
+        AdvectionDiffusionMethod(methodParameters P,velocitySpace *v, initialValueGen* iV);
         ~AdvectionDiffusionMethod(){
             rho.clear();
             rho_work.clear();
             rho_init.clear();
+            vvQint.clear();
         }
 
         void compute();
@@ -32,10 +33,12 @@ class AdvectionDiffusionMethod : public PDEmethod
     protected:
 
     private:
-        vector<double> rho, rho_work, rho_init;
-        double (*vvQ)(unsigned int);
+        vector<double> rho, rho_work, rho_init, vvQint;
         double l1, l2;
+        velocitySpace *V;
+
         void init_values();
+        void compute_vvQint();
         void compute_time_iteration(vector<double>* rho_from, vector<double>* rho_to);
         void compute_boundary_values(vector<double>* rho_from, vector<double>* rho_to);
         void compute_boundary_values_Neumann(vector<double>* rho_to);

@@ -1,4 +1,5 @@
 #include <string>
+#include <cstring>
 #include <iostream>
 #include <AdvectionDiffusionMethod.h>
 #include <GliomaModel.h>
@@ -11,7 +12,8 @@ using namespace std;
 void ADM(string IN_PARAMETERS,string IN_VSPACE,string OUT_VALUES){
     methodParameters P(IN_PARAMETERS);
     initialValueGen iV(P.N_spatialPoints(),"SQ","ADM");
-    AdvectionDiffusionMethod M(P,&iV);
+    velocitySpace V(IN_VSPACE,true);
+    AdvectionDiffusionMethod M(P,&V,&iV);
     M.compute();
     M.write_toGnuplot(OUT_VALUES);
 }
@@ -29,10 +31,26 @@ void GM(string IN_PARAMETERS,string IN_VSPACE,string OUT_VALUES){
 
 int main(int argc,const char *argv[]){
     string IN_PARAMETERS, IN_VALUES, IN_VSPACE, OUT_VALUES;
-    IN_PARAMETERS = (argc>=2) ? argv[1] : "param.data";
-    IN_VSPACE = (argc>=3) ? argv[2] : "vSpace.data";
-    OUT_VALUES = (argc>=4) ? argv[3] : "rho.data";
-    //ADM();
-    GM(IN_PARAMETERS,IN_VSPACE,OUT_VALUES);
+    if(argc<2){
+        cout << "Too few arguments.\nSyntax: "
+             << argv[0] << " -ADM/-GM [,in_param_path] [,in_vSpace_path] [,out_path]";
+        return -1;
+    }
+    IN_PARAMETERS = (argc>=3) ? argv[2] : "param.data";
+    IN_VSPACE = (argc>=4) ? argv[3] : "vSpace.data";
+    OUT_VALUES = (argc>=5) ? argv[4] : "rho.data";
+    if( strcmp(argv[1],"-ADM") == 0){
+        cout << "Running Advection-Diffusion-Model.\nOutput in "
+             << OUT_VALUES << endl;
+        ADM(IN_PARAMETERS,IN_VSPACE,OUT_VALUES);
+    }else if( strcmp(argv[1],"-GM") == 0){
+        cout << "Running GlioMath-Model.\nOutput in "
+             << OUT_VALUES << endl;
+        GM(IN_PARAMETERS,IN_VSPACE,OUT_VALUES);
+    }else{
+        cout << "Invalid argument.\nSyntax: "
+             << argv[0] << " -ADM/-GM [,in_param_path] [,in_vSpace_path] [,out_path]";
+        return -2;
+    }
     return 0;
 }

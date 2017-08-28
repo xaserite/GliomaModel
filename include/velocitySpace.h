@@ -19,6 +19,7 @@ class velocitySpace{
         double w(unsigned int i);
         double v(unsigned int i);
         unsigned int N();
+        bool is_constant(){return is_E_const;}
 
     private:
         ifstream FILESTREAM;
