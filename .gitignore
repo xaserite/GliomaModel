@@ -6,3 +6,4 @@ C++.gitignore
 *.cbp
 *.depend
 *.layout
+*.png
