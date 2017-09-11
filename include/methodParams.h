@@ -12,7 +12,7 @@ class methodParameters{
         methodParameters(string filename){
             ifstream INPUTSTREAM;
             INPUTSTREAM.open(filename,ios::in);
-            INPUTSTREAM >> n_timeSteps >> n_spatialPoints;
+            INPUTSTREAM >> n_timeSteps >> n_xpoints;
             INPUTSTREAM >> t >> X_0 >> X_N;
             INPUTSTREAM >> L1 >> L2;
             INPUTSTREAM >> Eps;
@@ -20,7 +20,7 @@ class methodParameters{
         }
         ~methodParameters(){};
         unsigned int N_timeSteps(){ return n_timeSteps; }
-        unsigned int N_spatialPoints(){ return n_spatialPoints; }
+        unsigned int N_xPoints(){ return n_xpoints; }
         double T(){ return t; }
         double x_0(){ return X_0; }
         double x_N(){ return X_N; }
@@ -29,7 +29,7 @@ class methodParameters{
         double l2(){ return L2; }
     protected:
     private:
-        unsigned int n_timeSteps, n_spatialPoints;
+        unsigned int n_timeSteps, n_xpoints, n_ypoints;
         double t, X_0, X_N, Eps, L1, L2;
 };
 

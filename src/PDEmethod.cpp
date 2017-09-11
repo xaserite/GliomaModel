@@ -2,7 +2,7 @@
 
 void PDEmethod::set_methodParameters(methodParameters P){
     N_timeSteps = P.N_timeSteps();
-    N_spatialPoints = P.N_spatialPoints();
+    N_x = P.N_xPoints();
     T = P.T();
     x_0 = P.x_0();
     x_N = P.x_N();
@@ -11,7 +11,7 @@ void PDEmethod::set_methodParameters(methodParameters P){
 }
 
 void PDEmethod::compute_dx(){
-    dx = (x_N-x_0)/(N_spatialPoints-1);
+    dx = (x_N-x_0)/(N_x-1);
     compute_alpha();
     compute_beta();
 }

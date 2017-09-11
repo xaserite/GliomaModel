@@ -4,6 +4,7 @@
 #include <string>
 #include <fstream>
 #include <vector>
+#include <exception>
 #include <methodParams.h>
 
 using namespace std;
@@ -16,17 +17,20 @@ class velocitySpace{
 
         void GM_fill_E(methodParameters *P);
         double E(unsigned int j,unsigned int i);
-        double w(unsigned int i);
-        double v(unsigned int i);
+        double E(unsigned int k,unsigned int i,unsigned int j);
+        double w(unsigned int j);
+        double v(unsigned int j,unsigned d);
         unsigned int N();
+        unsigned int dim();
 
     private:
         ifstream FILESTREAM;
-        vector<double> _w, _v;
-        double* _E;
-        unsigned int _N, _Nx;
+        vector<double> _w, _v, _E;
+        unsigned int _dim, _N, _Nx=1, _Ny=1;
         bool is_E_const, do_read_E;
 
+        void read_v();
+        void read_w();
         void read_E();
 };
 
