@@ -39,7 +39,7 @@ class methodParameters{
         double l2(){ return L2; }
     protected:
     private:
-        unsigned int n_timeSteps, n_xpoints, n_ypoints, dim;
+        unsigned int n_timeSteps, n_xpoints=1, n_ypoints=1, dim;
         double t, X_0, X_N, Y_0,Y_N, Eps, L1, L2;
 };
 

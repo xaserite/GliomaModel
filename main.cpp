@@ -12,7 +12,7 @@ using namespace std;
 
 void ADM(){
     methodParameters P("param.data");
-    initialValueGen iV(P.N_xPoints(),"SQ","ADM");
+    initialValueGen iV(P.N_xPoints(),P.N_yPoints(),"SQ","ADM");
     AdvectionDiffusionMethod M(P,&iV);
     M.compute();
     M.write_toGnuplot("rho.data");
@@ -20,13 +20,12 @@ void ADM(){
 
 void GM(){
     methodParameters P("param.data");
-    initialValueGen iV(P.N_xPoints(),"SQ","ADM");
+    initialValueGen iV(P.N_xPoints(),P.N_yPoints(),"SQ","ADM");
     //velocitySpace V("vSpace.data",true);
     velocitySpace V("vSpace.data",true);
-    /*V.GM_fill_E(&P);
     GliomaModel M(P,&V,&iV);
     M.compute();
-    M.write_toGnuplot("rho.data");*/
+    /*M.write_toGnuplot("rho.data");*/
 }
 
 int main(){

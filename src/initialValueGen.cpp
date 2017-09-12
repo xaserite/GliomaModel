@@ -1,7 +1,7 @@
 #include "initialValueGen.h"
 
-initialValueGen::initialValueGen(unsigned int n, string mode,string method){
-    N = n;
+initialValueGen::initialValueGen(unsigned nx,unsigned int ny, string mode,string method){
+    Nx = nx; Ny = ny;
     if(mode=="SQ"){
         if (method=="ADM") generate_SQ_for_ADM();
     }
@@ -9,9 +9,16 @@ initialValueGen::initialValueGen(unsigned int n, string mode,string method){
 }
 
 void initialValueGen::generate_SQ_for_ADM(){
-    rho = vector<double>(N);
-    unsigned int n_left = (int)(.4*N), n_right = (int)(.6*N);
-    for(size_t i=0;i<n_left;i++) rho[i] = 0;
-    for(size_t i=n_left;i<n_right;i++) rho[i] = 1;
-    for(size_t i=n_right;i<N;i++) rho[i] = 0;
+    rho = vector<double>(Nx*Ny);
+    unsigned int nx_left = (int)(.4*Nx), nx_right = (int)(.6*Nx);
+    unsigned int ny_left = (int)(.4*Ny), ny_right = (int)(.6*Ny);
+    for(size_t j=0;j<nx_left;j++)
+        for(size_t i=0;i<Ny;i++) rho[i] = 0;
+    for(size_t j=nx_left;j<nx_right;j++){
+        for(size_t i=0;i<ny_left;i++) rho[i] = 0;
+        for(size_t i=ny_left;i<ny_right;i++) rho[i] = 1;
+        for(size_t i=ny_right;i<Ny;i++) rho[i] = 0;
+    }
+    for(size_t j=nx_right;j<Nx;j++)
+        for(size_t i=0;i<Ny;i++) rho[i] = 0;
 }
