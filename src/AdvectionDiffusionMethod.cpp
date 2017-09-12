@@ -49,17 +49,17 @@ void AdvectionDiffusionMethod::compute_boundary_values_Neumann(vector<double>* r
 
 void AdvectionDiffusionMethod::compute_spatial_point(vector<double>* rho_from, vector<double>* rho_to, size_t i){
     (*rho_to)[i] = (*rho_from)[i]
-        + beta/l1*( (*rho_from)[i-1]-2*(*rho_from)[i]+(*rho_from)[i+1] )
-        - .5*l2/l1*alpha*( (*rho_from)[i+1]-(*rho_from)[i-1] );
+        + beta_x/l1*( (*rho_from)[i-1]-2*(*rho_from)[i]+(*rho_from)[i+1] )
+        - .5*l2/l1*alpha_x*( (*rho_from)[i+1]-(*rho_from)[i-1] );
 }
 
 void AdvectionDiffusionMethod::read_initialValues(string filename){
-    unsigned int N_x;
+    unsigned int n_x;
     INPUTSTREAM.open(filename,ios::in);
     if(!INPUTSTREAM) return;
-    INPUTSTREAM >> N_x;
-    if(N_x==N_x)
-        for(size_t it=0;it<N_x;it++)
+    INPUTSTREAM >> n_x;
+    if(n_x==N_x)
+        for(size_t it=0;it<n_x;it++)
             INPUTSTREAM >> rho_init[it];
     INPUTSTREAM.close();
 }

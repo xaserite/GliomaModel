@@ -39,8 +39,8 @@ class PDEmethod
         void set_methodParameters(methodParameters P);
 
     protected:
-        unsigned int timeStep, N_timeSteps, N_x, N_y;
-        double T, dt, dx, dy, alpha, beta;
+        unsigned int timeStep, N_timeSteps, N_x, N_y, dim;
+        double T, dt, dx, dy, alpha_x, beta_x, alpha_y, beta_y;
         double x_0, x_N, y_0, y_N;
         ifstream INPUTSTREAM;
         ofstream OUTPUTSTREAM;
@@ -49,8 +49,10 @@ class PDEmethod
         void compute_dx();
         void compute_dy();
         void compute_dt();
-        void compute_alpha();
-        void compute_beta();
+        void compute_alpha_x();
+        void compute_beta_x();
+        void compute_alpha_y();
+        void compute_beta_y();
 };
 
 #endif // PDEMETHOD_H

@@ -112,8 +112,8 @@ void GliomaModel::compute_g_inner(unsigned int i){
     double Drho = ( (*rho_old)[i]-(*rho_old)[i-1] )/dx;
     vgInt = integral_vg(i);
     for(size_t j=0;j<V->N();j++){
-        double vEDrho = V->v(j,0)*V->E(j,i) *Drho/eps;
-        double ProjvDg = vDg[j] -V->E(j,i)*vDgInt;
+        double vEDrho = V->v(j,0)*V->E(j,i,0) *Drho/eps;
+        double ProjvDg = vDg[j] -V->E(j,i,0)*vDgInt;
         double g_ = (*g_old)[j][i] +dt/eps *( ProjS(i,j)-ProjvDg-vEDrho );
         (*g_up)[j][i] = g_ / (1 + l1* dt/eps/eps);
     }
@@ -127,8 +127,8 @@ void GliomaModel::compute_rho_inner(unsigned int i){
 }
 
 double GliomaModel::ProjS(unsigned int i,unsigned int j){
-    double vRhoE = V->v(j,0)*V->E(j,i)/(2*eps) * ( (*rho_old)[i]+(*rho_old)[i+1] );
-    double vgProj = V->v(j,0)*(*g_old)[j][i] - vgInt*V->E(j,i);
+    double vRhoE = V->v(j,0)*V->E(j,i,0)/(2*eps) * ( (*rho_old)[i]+(*rho_old)[i+1] );
+    double vgProj = V->v(j,0)*(*g_old)[j][i] - vgInt*V->E(j,i,0);
     return l2*(vRhoE + vgProj) ;
 }
 
