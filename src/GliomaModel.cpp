@@ -5,15 +5,15 @@ GliomaModel::GliomaModel(methodParameters P,velocitySpace *v){
     eps = P.eps();
     l1 = P.l1(); l2 = P.l2();
     V = v;
-    rho = vector<double>(N_x);
-    rho_init = vector<double>(N_x);
-    rho_work = vector<double>(N_x);
+    rho = vector<double>(N_x*N_y);
+    rho_init = vector<double>(N_x*N_y);
+    rho_work = vector<double>(N_x*N_y);
     g = vector< vector<double> >(V->N());
     g_work = vector< vector<double> >(V->N());
     vDg = vector<double>(V->N());
     for(size_t j=0;j<V->N();j++){
-        g[j] = vector<double>(N_x+1);
-        g_work[j] = vector<double>(N_x+1);
+        g[j] = vector<double>( (N_x+1)*(N_y+1) );
+        g_work[j] = vector<double>( (N_x+1)*(N_y+1) );
     }
 }
 
@@ -22,15 +22,15 @@ GliomaModel::GliomaModel(methodParameters P,velocitySpace *v,initialValueGen* iV
     eps = P.eps();
     l1 = P.l1(); l2 = P.l2();
     V = v;
-    rho = vector<double>(N_x);
-    rho_init = vector<double>(N_x);
-    rho_work = vector<double>(N_x);
+    rho = vector<double>(N_x*N_y);
+    rho_init = vector<double>(N_x*N_y);
+    rho_work = vector<double>(N_x*N_y);
     g = vector< vector<double> >(V->N());
     g_work = vector< vector<double> >(V->N());
     vDg = vector<double>(V->N());
     for(size_t j=0;j<V->N();j++){
-        g[j] = vector<double>(N_x+1);
-        g_work[j] = vector<double>(N_x+1);
+        g[j] = vector<double>( (N_x+1)*(N_y+1) );
+        g_work[j] = vector<double>( (N_x+1)*(N_y+1) );
     }
     set_rho_init(iV->get_rho());
 }
@@ -49,6 +49,7 @@ GliomaModel::~GliomaModel(){
 }
 
 void GliomaModel::compute(){
+    //cout << "GM: dim = " << dim << ", Nx = " << N_x << ", Ny = " << N_y << endl;
     timeStep = 0;
     init_values();
     while(timeStep<N_timeSteps){
@@ -60,7 +61,8 @@ void GliomaModel::compute(){
 
 void GliomaModel::set_rho_init(vector<double> *data){
     for(size_t i=0;i<N_x;i++)
-        rho_init[i] = (*data)[i];
+        for(size_t j=0;j<N_y;j++)
+            rho_init[i+N_x*j] = (*data)[i+N_x*j];
 }
 
 void GliomaModel::init_values(){

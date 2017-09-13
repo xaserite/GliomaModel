@@ -19,13 +19,13 @@ void ADM(){
 }
 
 void GM(){
-    methodParameters P("param.data");
+    methodParameters P("1d_param.data");
     initialValueGen iV(P.N_xPoints(),P.N_yPoints(),"SQ","ADM");
     //velocitySpace V("vSpace.data",true);
-    velocitySpace V("vSpace.data",true);
+    velocitySpace V("1d_vSpace.data",true);
     GliomaModel M(P,&V,&iV);
     M.compute();
-    /*M.write_toGnuplot("rho.data");*/
+    M.write_toGnuplot("rho.data");
 }
 
 int main(){

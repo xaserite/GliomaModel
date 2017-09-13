@@ -34,7 +34,7 @@ void velocitySpace::GM_fill_E(methodParameters *P){
 
 double velocitySpace::E(unsigned int k, unsigned int i, unsigned int j){
     if(_Nx==1) return _E[k];
-    else if(_Ny==1) return _E[i*_Ny*_N + k];
+    else if(_Ny==1) return _E[i*_N + k];
     else return _E[i*_Ny*_N + j*_N + k];
 }
 
