@@ -36,17 +36,17 @@ class GliomaModel : public PDEmethod
         void init_values();
         void swap_func_pointers();
         void compute_time_iteration();
-        void compute_vDg_fb(unsigned int i);
-        void compute_vDg(unsigned int i);
-        void compute_g_inner(unsigned int i);
-        void compute_rho_inner(unsigned int i);
+        void compute_vDg_fb(unsigned int i,unsigned int j);
+        void compute_vDg(unsigned int i,unsigned int j);
+        void compute_g_inner(unsigned int i,unsigned int j);
+        void compute_rho_inner(unsigned int i,unsigned int j);
         void compute_boundary_Neumann();
         void compute_boundary_periodic();
         void compute_boundary_Dirichlet();
 
         double integral_vDg();
-        double integral_vg(unsigned int i);
-        double ProjS(unsigned int i,unsigned int j);
+        double integral_vg(unsigned int i,unsigned int j);
+        double ProjS(unsigned int i,unsigned int j,unsigned int k);
 };
 
 #endif // GLIOMAMODEL_H
