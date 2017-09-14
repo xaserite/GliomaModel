@@ -24,28 +24,29 @@ class GliomaModel : public PDEmethod
         void write_toGnuplot(string filename);
 
     private:
-        vector<double> rho, rho_work, rho_init, vDg;
+        vector<double> rho, rho_work, rho_init, vDg, l2,vgInt;
         vector< vector<double> >  g, g_work;
         vector<double> *rho_old, *rho_up;
         vector< vector<double> > *g_old, *g_up;
         velocitySpace *V;
-        double eps, l1, l2;
-        double vgInt;
+        double eps, l1;
         ofstream OUTPUTfILESTREAM;
 
         void init_values();
         void swap_func_pointers();
         void compute_time_iteration();
-        void compute_vDg_fb(unsigned int i,unsigned int j);
-        void compute_vDg(unsigned int i,unsigned int j);
         void compute_g_inner(unsigned int i,unsigned int j);
         void compute_rho_inner(unsigned int i,unsigned int j);
+        void compute_vDg_fb(unsigned int i,unsigned int j);
+        void compute_vDg(unsigned int i,unsigned int j);
+        void compute_vgInt(unsigned int i,unsigned int j);
         void compute_boundary_Neumann();
         void compute_boundary_periodic();
         void compute_boundary_Dirichlet();
 
         double integral_vDg();
-        double integral_vg(unsigned int i,unsigned int j);
+        double rhoE(unsigned int i,unsigned int j,unsigned int k);
+        double DvrhoE(unsigned int i,unsigned j,unsigned k);
         double ProjS(unsigned int i,unsigned int j,unsigned int k);
 };
 
