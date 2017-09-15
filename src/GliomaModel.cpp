@@ -166,9 +166,13 @@ double GliomaModel::integral_vg(unsigned int i){
 
 void GliomaModel::write_toGnuplot(string filename){
     OUTPUTSTREAM.open(filename,ios::out);
+    ofstream foo("g_correct.data",ios::out);
     if(!OUTPUTSTREAM) return;
     for(size_t i=0;i<N_spatialPoints;i++){
         OUTPUTSTREAM << x_0+i*dx << "\t" << (*rho_up)[i] << endl;
     }
+    for(size_t i=0;i<N_spatialPoints+1;i++)
+        foo << x_0+(i-.5)*dx << "\t" << (*g_up)[0][i] << "\t" << (*g_up)[1][i] << endl;
+    foo.close();
     OUTPUTSTREAM.close();
 }

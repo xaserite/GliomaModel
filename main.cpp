@@ -38,7 +38,7 @@ int main(int argc,const char *argv[]){
     }
     IN_PARAMETERS = (argc>=3) ? argv[2] : "param.data";
     IN_VSPACE = (argc>=4) ? argv[3] : "vSpace.data";
-    OUT_VALUES = (argc>=5) ? argv[4] : "rho.data";
+    OUT_VALUES = (argc>=5) ? argv[4] : "rho_correct.data";
     if( strcmp(argv[1],"-ADM") == 0){
         cout << "Running Advection-Diffusion-Model.\nOutput in "
              << OUT_VALUES << endl;
