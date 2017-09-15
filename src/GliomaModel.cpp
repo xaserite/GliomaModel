@@ -94,7 +94,7 @@ void GliomaModel::compute_vDg_fb(unsigned int i){
 
 void GliomaModel::compute_vDg(unsigned int i){
     for(size_t j=0;j<V->N();j++)
-        vDg[j] = V->v(j)*( (*g_old)[j][i+1]-(*g_old)[j][i] )/dx;
+        vDg[j] = V->v(j)*( (*g_up)[j][i+1]-(*g_up)[j][i] )/dx;
 }
 
 void GliomaModel::compute_g_inner(unsigned int i){
