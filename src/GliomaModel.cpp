@@ -127,12 +127,12 @@ void GliomaModel::compute_rho_inner(unsigned int i,unsigned int j){ //should be 
 
 void GliomaModel::compute_vDg_fb(unsigned int i,unsigned j){ //should be correct
     for(size_t k=0;k<V->N();k++){
-        if(V->v(j,0)>0)
+        if(V->v(k,0)>0)
             vDg[k] = V->v(k,0)/dx* ( (*g_old)[k][j*(N_x+1) +i]-(*g_old)[k][j*(N_x+1) +i-1] );
         else
             vDg[k] = V->v(k,0)/dx* ( (*g_old)[k][j*(N_x+1) +i+1]-(*g_old)[k][j*(N_x+1) +i] );
         if(dim!=2) continue;
-        if(V->v(j,1)>0)
+        if(V->v(k,1)>0)
             vDg[k]+= V->v(k,1)/dy* ( (*g_old)[k][j*(N_x+1) +i]-(*g_old)[k][(j-1)*(N_x+1) +i] );
         else
             vDg[k]+= V->v(k,1)/dy* ( (*g_old)[k][(j+1)*(N_x+1) +i]-(*g_old)[k][j*(N_x+1) +i] );
