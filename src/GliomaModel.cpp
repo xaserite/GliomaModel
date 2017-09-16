@@ -104,7 +104,7 @@ void GliomaModel::compute_time_iteration(){ //should be correct
         for(size_t i=1;i<N_x-1;i++)
             compute_rho_inner(i,0);
     }
-    compute_boundary_Neumann();
+    //compute_boundary_Neumann();
 }
 
 void GliomaModel::compute_g_inner(unsigned int i,unsigned int j){
@@ -229,19 +229,13 @@ void GliomaModel::compute_vgInt(unsigned int i,unsigned int j){
 
 void GliomaModel::write_toGnuplot(string filename){
     OUTPUTfILESTREAM.open(filename,ios::out);
-    ofstream foo("g.data",ios::out);
     if(!OUTPUTfILESTREAM) return;
     if(dim==1){
         for(size_t i=0;i<N_x;i++)
             OUTPUTfILESTREAM << x_0+i*dx << "\t" << (*rho_up)[i] << endl;
-        for(size_t i=0;i<N_x+1;i++)
-            foo << x_0+(i-.5)*dx << "\t" << (*g_up)[0][i]<< "\t" << (*g_up)[1][i] << endl;
-    }/*
-    else if(dim==2)
+    }else if(dim==2)
         for(size_t i=0;i<N_x;i++)
             for(size_t j=0;j<N_y;j++)
                 OUTPUTfILESTREAM << x_0+i*dx << "\t" << y_0+j*dy << "\t" << (*rho_up)[j*N_x+i] << endl;
-    }*/
-    foo.close();
     OUTPUTfILESTREAM.close();
 }
