@@ -11,7 +11,7 @@ using namespace std;
 
 void ADM(string IN_PARAMETERS,string IN_VSPACE,string OUT_VALUES){
     methodParameters P(IN_PARAMETERS);
-    initialValueGen iV(P.N_spatialPoints(),"SQ","ADM");
+    initialValueGen iV(P.N_xPoints(),P.N_yPoints(),"SQ","ADM");
     velocitySpace V(IN_VSPACE,true);
     AdvectionDiffusionMethod M(P,&V,&iV);
     M.compute();
@@ -20,7 +20,7 @@ void ADM(string IN_PARAMETERS,string IN_VSPACE,string OUT_VALUES){
 
 void GM(string IN_PARAMETERS,string IN_VSPACE,string OUT_VALUES){
     methodParameters P(IN_PARAMETERS);
-    initialValueGen iV(P.N_spatialPoints(),"SQ","ADM");
+    initialValueGen iV(P.N_xPoints(),P.N_yPoints(),"SQ","ADM");
     velocitySpace V(IN_VSPACE,true);
     //velocitySpace V("vSpace.data",false);
     //V.GM_fill_E(&P);
@@ -36,9 +36,9 @@ int main(int argc,const char *argv[]){
              << argv[0] << " -ADM/-GM [,in_param_path] [,in_vSpace_path] [,out_path]";
         return -1;
     }
-    IN_PARAMETERS = (argc>=3) ? argv[2] : "param.data";
-    IN_VSPACE = (argc>=4) ? argv[3] : "vSpace.data";
-    OUT_VALUES = (argc>=5) ? argv[4] : "rho_correct.data";
+    IN_PARAMETERS = (argc>=3) ? argv[2] : "1d_param.data";
+    IN_VSPACE = (argc>=4) ? argv[3] : "1d_vSpace.data";
+    OUT_VALUES = (argc>=5) ? argv[4] : "rho.data";
     if( strcmp(argv[1],"-ADM") == 0){
         cout << "Running Advection-Diffusion-Model.\nOutput in "
              << OUT_VALUES << endl;

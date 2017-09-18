@@ -10,7 +10,7 @@ using namespace std;
 class initialValueGen
 {
     public:
-        initialValueGen(unsigned int N, string mode,string method);
+        initialValueGen(unsigned int Nx, unsigned int Ny, string mode,string method);
         ~initialValueGen(){
             rho.clear();
         }
@@ -19,7 +19,7 @@ class initialValueGen
     protected:
 
     private:
-        unsigned int N;
+        unsigned int Nx, Ny;
         vector<double> rho;
 
         void generate_SQ_for_ADM();

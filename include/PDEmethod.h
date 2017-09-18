@@ -23,27 +23,36 @@ class PDEmethod
             N_timeSteps = val;
             compute_dt();
         }
-        unsigned int get_N_spatialPoints() { return N_spatialPoints; }
-        void set_N_spatialPoints(unsigned int val){
-             N_spatialPoints = val;
+        unsigned int get_N_x() { return N_x; }
+        void set_N_x(unsigned int val){
+             N_x = val;
              compute_dx();
+        }
+        unsigned int get_N_y() { return N_y; }
+        void set_N_y(unsigned int val){
+             N_y = val;
+             compute_dy();
         }
         double get_dt() { return dt; }
         double get_dx() { return dx; }
+        double get_dy() { return dy; }
         void set_methodParameters(methodParameters P);
 
     protected:
-        unsigned int timeStep, N_timeSteps, N_spatialPoints;
-        double T, dt, dx, alpha, beta;
-        double x_0, x_N;
+        unsigned int timeStep, N_timeSteps, N_x, N_y, dim;
+        double T, dt, dx, dy, alpha_x, beta_x, alpha_y, beta_y;
+        double x_0, x_N, y_0, y_N;
         ifstream INPUTSTREAM;
         ofstream OUTPUTSTREAM;
 
     private:
         void compute_dx();
+        void compute_dy();
         void compute_dt();
-        void compute_alpha();
-        void compute_beta();
+        void compute_alpha_x();
+        void compute_beta_x();
+        void compute_alpha_y();
+        void compute_beta_y();
 };
 
 #endif // PDEMETHOD_H
