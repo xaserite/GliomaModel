@@ -1,4 +1,5 @@
 #include "GliomaModel.h"
+#include <cmath>
 
 GliomaModel::GliomaModel(methodParameters P,velocitySpace *v){
     set_methodParameters(P);
@@ -104,7 +105,7 @@ void GliomaModel::compute_time_iteration(){ //should be correct
         for(size_t i=1;i<N_x-1;i++)
             compute_rho_inner(i,0);
     }
-    //compute_boundary_Neumann();
+    compute_boundary_Neumann();
 }
 
 void GliomaModel::compute_g_inner(unsigned int i,unsigned int j){
@@ -166,10 +167,10 @@ double GliomaModel::ProjS(unsigned int i,unsigned int j,unsigned int k){
 }
 
 double GliomaModel::rhoE(unsigned int i,unsigned int j,unsigned int k){
-    double rE = (*rho_old)[j*N_x +i]*V->E(k,i,j) +(*rho_old)[j*N_x +i+1]*V->E(k,i+1,j);
+    double rE = (*rho_old)[j*N_x +i]*V->E(k,i,j) +(*rho_old)[j*N_x +i-1]*V->E(k,i-1,j);
     if(N_y<=1) return rE/2;
     else{
-        rE = (*rho_old)[j*N_x +i]*V->E(k,i,j) +(*rho_old)[(j+1)*N_x +i]*V->E(k,i,j+1);
+        rE += (*rho_old)[(j-1)*N_x +i]*V->E(k,i,j-1) +(*rho_old)[(j-1)*N_x +i-1]*V->E(k,i-1,j-1);
         return rE/4;
     }
 }
