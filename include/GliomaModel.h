@@ -38,8 +38,8 @@ class GliomaModel : public PDEmethod
         void compute_time_iteration();
         void compute_g_inner(unsigned int i,unsigned int j);
         void compute_rho_inner(unsigned int i,unsigned int j);
-        void compute_vDg_fb(unsigned int i,unsigned int j);
-        void compute_vDg(unsigned int i,unsigned int j);
+        void compute_vDg_upwind(unsigned int i,unsigned int j);
+        void compute_vDg_center(unsigned int i,unsigned int j);
         void compute_vgInt(unsigned int i,unsigned int j);
         void compute_boundary_Neumann();
         void compute_boundary_periodic();
