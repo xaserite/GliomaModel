@@ -233,8 +233,10 @@ void GliomaModel::write_toGnuplot(string filename){
         for(size_t i=0;i<N_x;i++)
             OUTPUTfILESTREAM << x_0+i*dx << "\t" << (*rho_up)[i] << endl;
     }else if(dim==2)
-        for(size_t i=0;i<N_x;i++)
+        for(size_t i=0;i<N_x;i++){
             for(size_t j=0;j<N_y;j++)
                 OUTPUTfILESTREAM << x_0+i*dx << "\t" << y_0+j*dy << "\t" << (*rho_up)[j*N_x+i] << endl;
+            OUTPUTfILESTREAM << endl;
+        }
     OUTPUTfILESTREAM.close();
 }
