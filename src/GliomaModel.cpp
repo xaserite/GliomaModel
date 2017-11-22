@@ -29,6 +29,10 @@ void GliomaModel::compute(){
     timeStep = 0;
     init_values();
     while(timeStep<N_timeSteps){
+        if(!monotonicity_preserved){
+            cout<<"monotonicity violated, aborting." << endl;
+            break;
+        }
         swap_func_pointers();
         compute_time_iteration();
         timeStep++;
@@ -56,8 +60,10 @@ void GliomaModel::init(methodParameters P,velocitySpace *v){
 
 void GliomaModel::set_rho_init(vector<double> *data){
     for(size_t i=0;i<N_x;i++)
-        for(size_t j=0;j<N_y;j++)
+        for(size_t j=0;j<N_y;j++){
             rho_init[i+N_x*j] = (*data)[i+N_x*j];
+            if(rho_init_max<rho_init[i+N_x*j]) rho_init_max = rho_init[i+N_x*j];
+        }
 }
 
 void GliomaModel::init_values(){
@@ -113,6 +119,7 @@ void GliomaModel::compute_rho_inner(unsigned int i,unsigned int j){ //should be 
     double vDgInt = integral_vDg();
     double SInt = 0;
     (*rho_up)[j*N_x +i] = (*rho_old)[j*N_x +i] + dt* (SInt - vDgInt);
+    validate_monotonicity(i,j);
 }
 
 void GliomaModel::compute_vDg_upwind(unsigned int i,unsigned j){
@@ -226,6 +233,10 @@ void GliomaModel::compute_vgInt(unsigned int i,unsigned int j){
     }
 }
 
+void GliomaModel::validate_monotonicity(unsigned int i, unsigned int j){
+    if(rho_init_max<(*rho_up)[j*N_x +i]) monotonicity_preserved = false;
+}
+
 void GliomaModel::write_toGnuplot(string filename){
     OUTPUTfILESTREAM.open(filename,ios::out);
     if(!OUTPUTfILESTREAM) return;
@@ -240,3 +251,19 @@ void GliomaModel::write_toGnuplot(string filename){
         }
     OUTPUTfILESTREAM.close();
 }
+
+void GliomaModel::write_toContol(string filename){
+    OUTPUTfILESTREAM.open(filename,ios::out);
+    if(!OUTPUTfILESTREAM) return;
+    if(dim==1){
+        for(size_t i=0;i<N_x;i++)
+            OUTPUTfILESTREAM << (*rho_up)[i] << endl;
+    }else if(dim==2)
+        for(size_t i=0;i<N_x;i++){
+            for(size_t j=0;j<N_y;j++)
+                OUTPUTfILESTREAM << (*rho_up)[j*N_x+i] << endl;
+            OUTPUTfILESTREAM << endl;
+        }
+    OUTPUTfILESTREAM.close();
+}
+

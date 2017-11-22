@@ -22,6 +22,7 @@ class GliomaModel : public PDEmethod
         void compute();
         void set_rho_init(vector<double> *data);
         void write_toGnuplot(string filename);
+        void write_toContol(string filename);
 
     private:
         vector<double> rho, rho_work, rho_init, vDg, l2,vgInt;
@@ -29,8 +30,9 @@ class GliomaModel : public PDEmethod
         vector<double> *rho_old, *rho_up;
         vector< vector<double> > *g_old, *g_up;
         velocitySpace *V;
-        double eps, l1;
+        double eps, l1, rho_init_max=1;
         ofstream OUTPUTfILESTREAM;
+        bool monotonicity_preserved = true;
 
         void init(methodParameters P,velocitySpace *v);
         void init_values();
@@ -41,6 +43,7 @@ class GliomaModel : public PDEmethod
         void compute_vDg_upwind(unsigned int i,unsigned int j);
         void compute_vDg_center(unsigned int i,unsigned int j);
         void compute_vgInt(unsigned int i,unsigned int j);
+        void validate_monotonicity(unsigned int i,unsigned int j);
         void compute_boundary_Neumann();
         void compute_boundary_periodic();
         void compute_boundary_Dirichlet();
