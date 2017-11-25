@@ -26,8 +26,8 @@ void GM(string IN_PARAMETERS,string IN_VSPACE,string OUT_VALUES){
     //V.GM_fill_E(&P);
     GliomaModel M(P,&V,&iV);
     M.compute();
-    //M.write_toGnuplot(OUT_VALUES);
-    M.write_toContol(OUT_VALUES);
+    M.write_toGnuplot(OUT_VALUES);
+    //M.write_toContol(OUT_VALUES);
 }
 
 int main(int argc,const char *argv[]){
