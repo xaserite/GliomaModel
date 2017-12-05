@@ -6,6 +6,7 @@
 #include <initialValueGen.h>
 #include <methodParams.h>
 #include <velocitySpace.h>
+#include <CFL_finder.h>
 
 using namespace std;
 
@@ -30,6 +31,17 @@ void GM(string IN_PARAMETERS,string IN_VSPACE,string OUT_VALUES){
     //M.write_toContol(OUT_VALUES);
 }
 
+void CFL(string IN_PARAMETERS,string IN_VSPACE,string OUT_VALUES){
+    methodParameters P(IN_PARAMETERS);
+    initialValueGen iV(P.N_xPoints(),P.N_yPoints(),"SQ","ADM");
+    velocitySpace V(IN_VSPACE,true);
+    GliomaModel M(P,&V,&iV);
+    CFL_finder c(&M);
+    c.analyse();
+    //M.write_toGnuplot(OUT_VALUES);
+    c.append_toFile(OUT_VALUES);
+}
+
 int main(int argc,const char *argv[]){
     string IN_PARAMETERS, IN_VALUES, IN_VSPACE, OUT_VALUES;
     if(argc<2){
@@ -48,6 +60,9 @@ int main(int argc,const char *argv[]){
         cout << "Running GlioMath-Model.\nOutput in "
              << OUT_VALUES << endl;
         GM(IN_PARAMETERS,IN_VSPACE,OUT_VALUES);
+    }else if( strcmp(argv[1],"-CFL") == 0){
+        cout << "Running CFL-check.\n";
+        CFL(IN_PARAMETERS,IN_VSPACE,OUT_VALUES);
     }else{
         cout << "Invalid argument.\nSyntax: "
              << argv[0] << " -ADM/-GM [,in_param_path] [,in_vSpace_path] [,out_path]";

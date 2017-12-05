@@ -20,9 +20,11 @@ class GliomaModel : public PDEmethod
         ~GliomaModel();
 
         void compute();
+        void compute_incomplete();
         void set_rho_init(vector<double> *data);
         void write_toGnuplot(string filename);
         void write_toContol(string filename);
+        bool was_monotonicity_preserved();
 
     private:
         vector<double> rho, rho_work, rho_init, vDg, l2,vgInt;
@@ -36,6 +38,7 @@ class GliomaModel : public PDEmethod
 
         void init(methodParameters P,velocitySpace *v);
         void init_values();
+        void reset_g();
         void swap_func_pointers();
         void compute_time_iteration();
         void compute_g_inner(unsigned int i,unsigned int j);

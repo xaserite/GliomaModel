@@ -26,11 +26,29 @@ GliomaModel::~GliomaModel(){
 }
 
 void GliomaModel::compute(){
+    monotonicity_preserved = true;
     timeStep = 0;
     init_values();
     while(timeStep<N_timeSteps){
         if(!monotonicity_preserved){
             cout<<"monotonicity violated, aborting." << endl;
+            break;
+        }
+        swap_func_pointers();
+        compute_time_iteration();
+        timeStep++;
+    }
+}
+
+void GliomaModel::compute_incomplete(){
+    monotonicity_preserved = true;
+    timeStep = 0;
+    init_values();
+    reset_g();
+    cout << N_timeSteps << "\t" << dt << "\t" << dx << "\t" << alpha_x << "\t" << beta_x << endl;
+    while(timeStep<N_timeSteps){
+        if(!monotonicity_preserved){
+            cout<<"monotonicity violated, aborting. k = " << timeStep << endl;
             break;
         }
         swap_func_pointers();
@@ -70,6 +88,12 @@ void GliomaModel::init_values(){
     for(size_t i=0;i<N_x*N_y;i++){
         rho[i] = rho_work[i] = rho_init[i];
     }
+}
+
+void GliomaModel::reset_g(){
+    for(size_t k=0;k<V->N();k++)
+        for(size_t i=0;i<(N_x+1)*(N_y+1);i++)
+            g[k][i] = g_work[k][i] = 0;
 }
 
 void GliomaModel::swap_func_pointers(){
@@ -241,6 +265,7 @@ void GliomaModel::write_toGnuplot(string filename){
     OUTPUTfILESTREAM.open(filename,ios::out);
     if(!OUTPUTfILESTREAM) return;
     if(dim==1){
+        OUTPUTfILESTREAM << "#" << N_x << endl;
         for(size_t i=0;i<N_x;i++)
             OUTPUTfILESTREAM << x_0+i*dx << "\t" << (*rho_up)[i] << endl;
     }else if(dim==2)
@@ -267,3 +292,6 @@ void GliomaModel::write_toContol(string filename){
     OUTPUTfILESTREAM.close();
 }
 
+bool GliomaModel::was_monotonicity_preserved(){
+    return monotonicity_preserved;
+}
