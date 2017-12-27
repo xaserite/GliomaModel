@@ -24,7 +24,9 @@ void GM(string IN_PARAMETERS,string IN_VSPACE,string OUT_VALUES){
     initialValueGen iV(P.N_xPoints(),P.N_yPoints(),"SQ","ADM");
     velocitySpace V(IN_VSPACE,true);
     //velocitySpace V("vSpace.data",false);
-    //V.GM_fill_E(&P);
+    //V.cross_fill_E(&P,4,0.8);
+    //V.band_fill_E(&P,5,0.8);
+    V.T_fill_E(&P,6,0.8);
     GliomaModel M(P,&V,&iV);
     M.compute();
     M.write_toGnuplot(OUT_VALUES);

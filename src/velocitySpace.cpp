@@ -32,6 +32,159 @@ void velocitySpace::GM_fill_E(methodParameters *P){
     }
 }
 
+void velocitySpace::band_fill_E(methodParameters *P, unsigned int offset, double drift){
+    if(_dim!=2 && _N!=4) return;
+    unsigned _xN = P->N_xPoints(),
+        _midN = _xN/2 + _xN%2,
+        _LN = _midN - offset,
+        _RN = _midN + offset + 1-_xN%2;
+    double dominant_speed = 1+drift,
+        inferior_speed = 1-drift;
+    for(size_t i=0;i<_xN;i++){
+        for(size_t j=0;j<_LN;j++){
+            _E[i*_Ny*_N + j*_N + 0] = 1;
+            _E[i*_Ny*_N + j*_N + 1] = 1;
+            _E[i*_Ny*_N + j*_N + 2] = 1;
+            _E[i*_Ny*_N + j*_N + 3] = 1;
+        }
+        for(size_t j=_LN;j<_RN;j++){
+            _E[i*_Ny*_N + j*_N + 0] = dominant_speed;
+            _E[i*_Ny*_N + j*_N + 1] = dominant_speed;
+            _E[i*_Ny*_N + j*_N + 2] = inferior_speed;
+            _E[i*_Ny*_N + j*_N + 3] = inferior_speed;
+        }
+        for(size_t j=_RN;j<_xN;j++){
+            _E[i*_Ny*_N + j*_N + 0] = 1;
+            _E[i*_Ny*_N + j*_N + 1] = 1;
+            _E[i*_Ny*_N + j*_N + 2] = 1;
+            _E[i*_Ny*_N + j*_N + 3] = 1;
+        }
+    }
+}
+
+void velocitySpace::cross_fill_E(methodParameters *P, unsigned int offset, double drift){
+    if(_dim!=2 && _N!=4) return;
+    unsigned _xN = P->N_xPoints(),
+        _midN = _xN/2 + _xN%2,
+        _LN = _midN - offset,
+        _RN = _midN + offset + 1-_xN%2;
+    double dominant_speed = 1+drift,
+        inferior_speed = 1-drift;
+    for(size_t i=0;i<_LN;i++){
+        for(size_t j=0;j<_LN;j++){
+            _E[i*_Ny*_N + j*_N + 0] = 1;
+            _E[i*_Ny*_N + j*_N + 1] = 1;
+            _E[i*_Ny*_N + j*_N + 2] = 1;
+            _E[i*_Ny*_N + j*_N + 3] = 1;
+        }
+        for(size_t j=_LN;j<_RN;j++){
+            _E[i*_Ny*_N + j*_N + 0] = dominant_speed;
+            _E[i*_Ny*_N + j*_N + 1] = dominant_speed;
+            _E[i*_Ny*_N + j*_N + 2] = inferior_speed;
+            _E[i*_Ny*_N + j*_N + 3] = inferior_speed;
+        }
+        for(size_t j=_RN;j<_xN;j++){
+            _E[i*_Ny*_N + j*_N + 0] = 1;
+            _E[i*_Ny*_N + j*_N + 1] = 1;
+            _E[i*_Ny*_N + j*_N + 2] = 1;
+            _E[i*_Ny*_N + j*_N + 3] = 1;
+        }
+    }
+    for(size_t i=_LN;i<_RN;i++){
+        for(size_t j=0;j<_LN;j++){
+            _E[i*_Ny*_N + j*_N + 0] = inferior_speed;
+            _E[i*_Ny*_N + j*_N + 1] = inferior_speed;
+            _E[i*_Ny*_N + j*_N + 2] = dominant_speed;
+            _E[i*_Ny*_N + j*_N + 3] = dominant_speed;
+        }
+        for(size_t j=_LN;j<_RN;j++){
+            _E[i*_Ny*_N + j*_N + 0] = 1;
+            _E[i*_Ny*_N + j*_N + 1] = 1;
+            _E[i*_Ny*_N + j*_N + 2] = 1;
+            _E[i*_Ny*_N + j*_N + 3] = 1;
+        }
+        for(size_t j=_RN;j<_xN;j++){
+            _E[i*_Ny*_N + j*_N + 0] = inferior_speed;
+            _E[i*_Ny*_N + j*_N + 1] = inferior_speed;
+            _E[i*_Ny*_N + j*_N + 2] = dominant_speed;
+            _E[i*_Ny*_N + j*_N + 3] = dominant_speed;
+        }
+    }
+    for(size_t i=_RN;i<_xN;i++){
+        for(size_t j=0;j<_LN;j++){
+            _E[i*_Ny*_N + j*_N + 0] = 1;
+            _E[i*_Ny*_N + j*_N + 1] = 1;
+            _E[i*_Ny*_N + j*_N + 2] = 1;
+            _E[i*_Ny*_N + j*_N + 3] = 1;
+        }
+        for(size_t j=_LN;j<_RN;j++){
+            _E[i*_Ny*_N + j*_N + 0] = dominant_speed;
+            _E[i*_Ny*_N + j*_N + 1] = dominant_speed;
+            _E[i*_Ny*_N + j*_N + 2] = inferior_speed;
+            _E[i*_Ny*_N + j*_N + 3] = inferior_speed;
+        }
+        for(size_t j=_RN;j<_xN;j++){
+            _E[i*_Ny*_N + j*_N + 0] = 1;
+            _E[i*_Ny*_N + j*_N + 1] = 1;
+            _E[i*_Ny*_N + j*_N + 2] = 1;
+            _E[i*_Ny*_N + j*_N + 3] = 1;
+        }
+    }
+}
+
+void velocitySpace::T_fill_E(methodParameters *P, unsigned int offset, double drift){
+    if(_dim!=2 && _N!=4) return;
+    unsigned _xN = P->N_xPoints(),
+        _midN = _xN/2 + _xN%2,
+        _LN = _midN - offset,
+        _RN = _midN + offset + 1-_xN%2;
+    double dominant_speed = 1+drift,
+        inferior_speed = 1-drift;
+    for(size_t i=0;i<_LN-1;i++){
+        for(size_t j=0;j<_xN;j++){
+            _E[i*_Ny*_N + j*_N + 0] = 1;
+            _E[i*_Ny*_N + j*_N + 1] = 1;
+            _E[i*_Ny*_N + j*_N + 2] = 1;
+            _E[i*_Ny*_N + j*_N + 3] = 1;
+        }
+    }{unsigned int i = _LN-1;
+        for(size_t j=0;j<_xN;j++){
+            _E[i*_Ny*_N + j*_N + 0] = 2;
+            _E[i*_Ny*_N + j*_N + 1] = 2;
+            _E[i*_Ny*_N + j*_N + 2] = 0;
+            _E[i*_Ny*_N + j*_N + 3] = 0;
+        }
+    }
+    for(size_t i=_LN;i<_RN;i++){
+        for(size_t j=0;j<_LN;j++){
+            _E[i*_Ny*_N + j*_N + 0] = inferior_speed;
+            _E[i*_Ny*_N + j*_N + 1] = inferior_speed;
+            _E[i*_Ny*_N + j*_N + 2] = dominant_speed;
+            _E[i*_Ny*_N + j*_N + 3] = dominant_speed;
+        }
+        for(size_t j=_LN;j<_RN;j++){
+            _E[i*_Ny*_N + j*_N + 0] = inferior_speed;
+            _E[i*_Ny*_N + j*_N + 1] = inferior_speed;
+            _E[i*_Ny*_N + j*_N + 2] = dominant_speed;
+            _E[i*_Ny*_N + j*_N + 3] = dominant_speed;
+        }
+        for(size_t j=_RN;j<_xN;j++){
+            _E[i*_Ny*_N + j*_N + 0] = 1;
+            _E[i*_Ny*_N + j*_N + 1] = 1;
+            _E[i*_Ny*_N + j*_N + 2] = 1;
+            _E[i*_Ny*_N + j*_N + 3] = 1;
+        }
+    }
+    for(size_t i=_RN;i<_xN;i++){
+        for(size_t j=0;j<_xN;j++){
+            _E[i*_Ny*_N + j*_N + 0] = 1;
+            _E[i*_Ny*_N + j*_N + 1] = 1;
+            _E[i*_Ny*_N + j*_N + 2] = 1;
+            _E[i*_Ny*_N + j*_N + 3] = 1;
+        }
+    }
+}
+
 double velocitySpace::E(unsigned int k, unsigned int i, unsigned int j){
     if(_Nx==1) return _E[k];
     else if(_Ny==1) return _E[i*_N + k];

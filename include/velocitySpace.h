@@ -16,6 +16,9 @@ class velocitySpace{
         ~velocitySpace();
 
         void GM_fill_E(methodParameters *P);
+        void band_fill_E(methodParameters *P, unsigned int offset, double drift);
+        void cross_fill_E(methodParameters *P, unsigned int offset, double drift);
+        void T_fill_E(methodParameters *P, unsigned int offset, double drift);
         double E(unsigned int j,unsigned int i);
         double E(unsigned int k,unsigned int i,unsigned int j);
         double w(unsigned int j);

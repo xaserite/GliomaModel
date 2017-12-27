@@ -30,10 +30,10 @@ void GliomaModel::compute(){
     timeStep = 0;
     init_values();
     while(timeStep<N_timeSteps){
-        if(!monotonicity_preserved){
+        /*if(!monotonicity_preserved){
             cout<<"monotonicity violated, aborting." << endl;
             break;
-        }
+        }*/
         swap_func_pointers();
         compute_time_iteration();
         timeStep++;
@@ -262,6 +262,7 @@ void GliomaModel::validate_monotonicity(unsigned int i, unsigned int j){
 }
 
 void GliomaModel::write_toGnuplot(string filename){
+    cout << dim << endl;
     OUTPUTfILESTREAM.open(filename,ios::out);
     if(!OUTPUTfILESTREAM) return;
     if(dim==1){
